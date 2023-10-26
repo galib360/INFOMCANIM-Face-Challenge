@@ -1,10 +1,13 @@
-import numpy as np
 import argparse
-from tqdm import tqdm
-import os, shutil
+import os
+import shutil
+
 import matplotlib.pyplot as plt
+import numpy as np
 import torch
 import torch.nn as nn
+from tqdm import tqdm
+
 from data_loader import get_dataloaders
 from faceXhubert import FaceXHuBERT
 
@@ -141,15 +144,15 @@ def main():
     parser = argparse.ArgumentParser(description='FaceXHuBERT: Text-less Speech-driven E(X)pressive 3D Facial Animation Synthesis using Self-Supervised Speech Representation Learning')
     parser.add_argument("--lr", type=float, default=0.0001, help='learning rate')
     parser.add_argument("--dataset", type=str, default="multiface", help='Name of the dataset folder. eg: multiface')
-    parser.add_argument("--vertice_dim", type=int, default=6172*3, help='number of vertices - 23370*3 for BIWI dataset 5023*3 for vocaset')
+    parser.add_argument("--vertice_dim", type=int, default=6172*3, help='number of vertices - 6172*3 for multiface dataset')
     parser.add_argument("--feature_dim", type=int, default=256, help='GRU Vertex decoder hidden size')
     parser.add_argument("--wav_path", type=str, default= "wav", help='path of the audio signals')
-    parser.add_argument("--vertices_path", type=str, default="vertices_npy", help='path of the ground truth')
+    parser.add_argument("--vertices_path", type=str, default="vertices_npy", help='path of the ground truth vertex data')
     parser.add_argument("--gradient_accumulation_steps", type=int, default=1, help='gradient accumulation')
     parser.add_argument("--max_epoch", type=int, default=100, help='number of epochs')
     parser.add_argument("--device", type=str, default="cuda")
     parser.add_argument("--template_file", type=str, default="templates.pkl", help='path of the train subject templates')
-    parser.add_argument("--save_path", type=str, default="save", help='path of the trained models')
+    parser.add_argument("--save_path", type=str, default="save", help='path to save the trained models')
     parser.add_argument("--result_path", type=str, default="result", help='path to the predictions')
     parser.add_argument("--train_subjects", type=str, default="1 2 3 6 7 8 9 10 11 12 13")
     parser.add_argument("--val_subjects", type=str, default="1 2 3 6 7 8 9 10 11 12 13")
