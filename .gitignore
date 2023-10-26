@@ -1,0 +1,11 @@
+# ignore the data files
+data/multiface/
+
+# ignore PyCharm files
+/.idea
+/__pycache__
+
+# ignore the following extensions
+*.npy
+*.pth
+*.mp4
