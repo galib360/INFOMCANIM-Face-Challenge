@@ -95,7 +95,7 @@ After training, the trained model will be saved in `save/` folder. You can use t
 
 - Given a raw audio file (wav_path), animate the mesh and render the video by running the following command: 
     ```
-    python predict.py --subject F1 --condition F3 --wav_path "demo/wav/test.wav"
+    python predict.py --subject 7 --condition 1 --wav_path "demo/wav/test.wav"
     ```
 
 - The `predict.py` will run and generate the rendered videos in the `demo/render/video_with_audio/` folder. The prediction data will be saved in `demo/result/` folder. Try playing with your own audio file (in .wav format), other subjects and conditions. 
