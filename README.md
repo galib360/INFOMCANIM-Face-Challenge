@@ -1,4 +1,4 @@
-# INFOMCANIM-Face-Challenge (2023-24)
+# INFOMCANIM-Face-Challenge (2024-25)
 
 ### This repository is made only for academic purposes in order to facilitate an assignment for Computer Animation master course at Utrecht University. 
 ### This repository contains the implementation of the baseline model (FaceXHuBERT) to be trained on Multiface dataset. The original paper details are as follows- 
@@ -105,6 +105,10 @@ After training, the trained model will be saved in `save/` folder. You can use t
 - Train FaceXHuBERT on multiface dataset, evaluate, generate results that will be needed for the user study later. 
 - Define your own model. (e.g.- The FacexHuBERT baseline model is defined in `faceXhubert.py`. You will define and implement your own model and create `<yourmodel>.py`).
 - Train your model, evaluate and generate results to be used for the user study. 
+
+## Additional Resources
+- [FaceDiffuser Project](https://uuembodiedsocialai.github.io/FaceDiffuser/)
+- [ProbTalk3D Project](https://uuembodiedsocialai.github.io/ProbTalk3D/)
 
 ## Suggestion
 - Use you favorite IDE for development (e.g. [PyCharm Community](https://www.jetbrains.com/help/pycharm/installation-guide.html)).
