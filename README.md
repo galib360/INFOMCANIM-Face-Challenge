@@ -54,7 +54,7 @@ pip install torch==1.10.1+cu113 torchvision==0.11.2+cu113 torchaudio==0.10.1+cu1
 ## Data
 ### Multiface
 
-The pre-processed [Multiface](https://github.com/facebookresearch/multiface/tree/main) dataset will be provided to your team. Uncompress the `multiface.zip` file and put the `multiface` folder in `data/` directory. You can run the `render_GT_multiface.py` to render the ground truth data that will be saved in `data/multiface/renders/` directory. To do so, from repository root directory, run the following commands- 
+The pre-processed [Multiface](https://github.com/facebookresearch/multiface/tree/main) dataset can be downloaded from [HERE](https://solisservices-my.sharepoint.com/:u:/g/personal/k_i_haque_uu_nl/EZ60UlOt4eJEmccaW4VfU9IBjNO14QNWDjQVigoc2hPb_A). Uncompress the `multiface.zip` file and put the `multiface` folder in `data/` directory. You can run the `render_GT_multiface.py` to render the ground truth data that will be saved in `data/multiface/renders/` directory. To do so, from repository root directory, run the following commands- 
 ```
 cd data/multiface
 python render_GT_multiface.py
