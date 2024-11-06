@@ -1,0 +1,1 @@
+The resultant animation data of the test split will be stored here after the training loop finishes. 

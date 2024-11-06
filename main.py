@@ -149,7 +149,7 @@ def main():
     parser.add_argument("--wav_path", type=str, default= "wav", help='path of the audio signals')
     parser.add_argument("--vertices_path", type=str, default="vertices_npy", help='path of the ground truth vertex data')
     parser.add_argument("--gradient_accumulation_steps", type=int, default=1, help='gradient accumulation')
-    parser.add_argument("--max_epoch", type=int, default=100, help='number of epochs')
+    parser.add_argument("--max_epoch", type=int, default=5, help='number of epochs')
     parser.add_argument("--device", type=str, default="cuda")
     parser.add_argument("--template_file", type=str, default="templates.pkl", help='path of the train subject templates')
     parser.add_argument("--save_path", type=str, default="save", help='path to save the trained models')

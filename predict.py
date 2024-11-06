@@ -19,11 +19,11 @@ def test_model(args):
         os.makedirs(args.result_path)
 
     model = FaceXHuBERT(args)
-    model.load_state_dict(torch.load('pretrained_model/{}.pth'.format(args.model_name)))
+    model.load_state_dict(torch.load('save/{}.pth'.format(args.model_name)))
     model = model.to(torch.device(args.device))
     model.eval()
 
-    template_file = os.path.join(args.dataset, args.template_path)
+    template_file = os.path.join('data',args.dataset, args.template_path)
     with open(template_file, 'rb') as fin:
         templates = pickle.load(fin,encoding='latin1')
 
@@ -74,12 +74,13 @@ def render(args):
     out_file_name = test_name + "_" + args.subject + "_Condition_" + args.condition
     predicted_vertices_path = os.path.join(args.result_path,out_file_name+".npy")
     if args.dataset == "multiface":
-        template_file = os.path.join(args.dataset + "/face_template.obj")
+        template_file = os.path.join('data', args.dataset + "/templates", args.subject + '.obj')
 
     cam = pyrender.PerspectiveCamera(yfov=np.pi / 3.0, aspectRatio=1.414)
+
     camera_pose = np.array([[1.0, 0, 0.0, 0.00],
-                            [0.0, -1.0, 0.0, 0.00],
-                            [0.0, 0.0, 1.0, -1.6],
+                            [0.0, 1.0, 0.0, 0.00],
+                            [0.0, 0.0, 1.0, 2.5],
                             [0.0, 0.0, 0.0, 1.0]])
 
     light = pyrender.DirectionalLight(color=[1.0, 1.0, 1.0], intensity=10.0)
@@ -117,14 +118,14 @@ def render(args):
     input_video = ffmpeg.input(video_woA_path)
     input_audio = ffmpeg.input(wav_path)
 
-    ffmpeg.concat(input_video, input_audio, v=1, a=1).output(video_wA_path).run()
+    ffmpeg.concat(input_video, input_audio, v=1, a=1).output(video_wA_path).run(overwrite_output=True)
     del video, seq, ref_mesh
     gc.collect()
 
 
 def main():
     parser = argparse.ArgumentParser(description='FaceXHuBERT: Text-less Speech-driven E(X)pressive 3D Facial Animation Synthesis using Self-Supervised Speech Representation Learning')
-    parser.add_argument("--model_name", type=str, default="FaceXHuBERT")
+    parser.add_argument("--model_name", type=str, default="FaceXHuBERT") # rename this to the model name in the save/ directory or rename the saved model to FaceXHuBERT.pth
     parser.add_argument("--dataset", type=str, default="multiface", help='name of the dataset folder.')
     parser.add_argument("--fps", type=float, default=30, help='frame rate - 30 for multiface')
     parser.add_argument("--feature_dim", type=int, default=256, help='GRU Vertex Decoder hidden size')

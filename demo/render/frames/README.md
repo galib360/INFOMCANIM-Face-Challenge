@@ -1,0 +1,1 @@
+This folder will contain temporary image frames for the rendered video. 

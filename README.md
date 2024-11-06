@@ -40,8 +40,10 @@ cd <repository_path>
 - Then run the following command in the Anaconda promt  
 
 ```
-conda env create --name FaceXHuBERT python=3.8 --file="environment.yml"
+conda create --name FaceXHuBERT python=3.8
 conda activate FaceXHuBERT
+pip install setuptools==62.6.0
+conda env update --file environment.yml
 pip install torch==1.10.1+cu113 torchvision==0.11.2+cu113 torchaudio==0.10.1+cu113 -f https://download.pytorch.org/whl/torch_stable.html
 
 ```

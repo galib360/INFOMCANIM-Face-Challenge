@@ -147,7 +147,6 @@ dependencies:
     - ruamel-yaml-clib==0.2.6
     - sacremoses==0.0.49
     - sentencepiece==0.1.96
-    - setuptools==62.6.0
     - shutils==0.1.0
     - six==1.15.0
     - sniffio==1.2.0
