@@ -1,4 +1,4 @@
-# INFOMCANIM-Face-Challenge (2024-25)
+# INFOMCANIM-Face-Challenge (INFOMCANIM 2025-26)
 
 ### This repository is made only for academic purposes in order to facilitate an assignment for Computer Animation master course at Utrecht University. 
 ### This repository contains the implementation of the baseline model (FaceXHuBERT) to be trained on Multiface dataset. The original paper details are as follows- 
