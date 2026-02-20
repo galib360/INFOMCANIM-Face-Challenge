@@ -1,10 +1,11 @@
-# ignore the data files
+# ignore the dataset folder and files
 data/multiface/
 
 # ignore PyCharm files
 /.idea
 /__pycache__
 /hubert/__pycache__
+/hubert/utils/__pycache__
 
 
 # ignore the following extensions

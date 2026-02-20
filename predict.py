@@ -127,16 +127,24 @@ def main():
     parser = argparse.ArgumentParser(description='FaceXHuBERT: Text-less Speech-driven E(X)pressive 3D Facial Animation Synthesis using Self-Supervised Speech Representation Learning')
     parser.add_argument("--model_name", type=str, default="FaceXHuBERT") # rename this to the model name in the save/ directory or rename the saved model to FaceXHuBERT.pth
     parser.add_argument("--dataset", type=str, default="multiface", help='name of the dataset folder.')
-    parser.add_argument("--fps", type=float, default=30, help='frame rate - 30 for multiface')
+    parser.add_argument("--fps", type=float, default=25, help='frame rate - 25 for multiface predictions')
     parser.add_argument("--feature_dim", type=int, default=256, help='GRU Vertex Decoder hidden size')
     parser.add_argument("--vertice_dim", type=int, default=6172*3, help='number of vertices - 6172*3 for multiface')
-    parser.add_argument("--device", type=str, default="cuda")
-    parser.add_argument("--train_subjects", type=str, default="1 2 3 6 7 8 9 10 11 12 13")
-    parser.add_argument("--test_subjects", type=str, default="1 2 3 4 5 6 7 8 9 10 11 12 13")
+    parser.add_argument("--device", type=str, default="cuda") # use this line to run on GPU, uncomment the next line to run on CPU
+    # parser.add_argument("--device", type=str, default="cpu") # use this line to run on CPU, comment the previous line
+
+    # use the next 2 lines to train and test on the full dataset
+    # parser.add_argument("--train_subjects", type=str, default="1 2 3 6 7 8 9 10 11 12 13")
+    # parser.add_argument("--test_subjects", type=str, default="1 2 3 4 5 6 7 8 9 10 11 12 13")
+
+    # use the next 2 lines to train and test on a smaller subset of the data for quick debugging
+    parser.add_argument("--train_subjects", type=str, default="2")
+    parser.add_argument("--test_subjects", type=str, default="2")
+
     parser.add_argument("--wav_path", type=str, default="demo/wav/test.wav", help='path of the input audio signal in .wav format')
     parser.add_argument("--result_path", type=str, default="demo/result", help='path of the predictions in .npy format')
-    parser.add_argument("--condition", type=str, default="3", help='select a conditioning subject from the list of train_subjects')
-    parser.add_argument("--subject", type=str, default="5", help='select any subject from test_subjects or train_subjects')
+    parser.add_argument("--condition", type=str, default="2", help='select a conditioning subject from the list of train_subjects')
+    parser.add_argument("--subject", type=str, default="2", help='select any subject from test_subjects or train_subjects')
     parser.add_argument("--template_path", type=str, default="templates.pkl", help='path of the personalized templates')
     parser.add_argument("--render_template_path", type=str, default="templates", help='path of the template mesh')
     parser.add_argument("--input_fps", type=int, default=50, help='HuBERT last hidden state produces 50 fps audio representation')

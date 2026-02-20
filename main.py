@@ -45,7 +45,7 @@ def trainer(args, train_loader, dev_loader, model, optimizer, criterion, epoch=1
             vertice = vertice.astype(np.float32)
             vertice = torch.from_numpy(vertice)
             vertice = torch.unsqueeze(vertice,0)
-            audio, vertice, template, one_hot = audio.to(device="cuda"), vertice.to(device="cuda"), template.to(device="cuda"), one_hot.to(device="cuda")
+            audio, vertice, template, one_hot = audio.to(device=args.device), vertice.to(device=args.device), template.to(device=args.device), one_hot.to(device=args.device)
             loss = model(audio, template,  vertice, one_hot, criterion)
 
             loss.backward()
@@ -70,7 +70,7 @@ def trainer(args, train_loader, dev_loader, model, optimizer, criterion, epoch=1
             vertice = vertice.astype(np.float32)
             vertice = torch.from_numpy(vertice)
             vertice = torch.unsqueeze(vertice, 0)
-            audio, vertice, template, one_hot_all = audio.to(device="cuda"), vertice.to(device="cuda"), template.to(device="cuda"), one_hot_all.to(device="cuda")
+            audio, vertice, template, one_hot_all = audio.to(device=args.device), vertice.to(device=args.device), template.to(device=args.device), one_hot_all.to(device=args.device)
             train_subject = "_".join(file_name[0].split("_")[:-1])
             if train_subject in train_subjects_list:
                 condition_subject = train_subject
@@ -118,7 +118,7 @@ def test(args, model, test_loader,epoch):
         vertice = vertice.astype(np.float32)
         vertice = torch.from_numpy(vertice)
         vertice = torch.unsqueeze(vertice, 0)
-        audio, vertice, template, one_hot_all = audio.to(device="cuda"), vertice.to(device="cuda"), template.to(device="cuda"), one_hot_all.to(device="cuda")
+        audio, vertice, template, one_hot_all = audio.to(device=args.device), vertice.to(device=args.device), template.to(device=args.device), one_hot_all.to(device=args.device)
         train_subject = "_".join(file_name[0].split("_")[:-1])
         if train_subject in train_subjects_list:
             condition_subject = train_subject
@@ -135,6 +135,8 @@ def test(args, model, test_loader,epoch):
                 prediction = prediction.squeeze()
                 np.save(os.path.join(result_path, file_name[0].split(".")[0]+"_condition_"+condition_subject+".npy"), prediction.detach().cpu().numpy())
 
+    torch.save(model.state_dict(), os.path.join(save_path, 'FaceXHuBERT.pth'))
+
 
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -146,17 +148,32 @@ def main():
     parser.add_argument("--dataset", type=str, default="multiface", help='Name of the dataset folder. eg: multiface')
     parser.add_argument("--vertice_dim", type=int, default=6172*3, help='number of vertices - 6172*3 for multiface dataset')
     parser.add_argument("--feature_dim", type=int, default=256, help='GRU Vertex decoder hidden size')
-    parser.add_argument("--wav_path", type=str, default= "wav", help='path of the audio signals')
-    parser.add_argument("--vertices_path", type=str, default="vertices_npy", help='path of the ground truth vertex data')
+
+    # use the next 2 lines to train and test on the full dataset
+    # parser.add_argument("--wav_path", type=str, default= "wav", help='path of the audio signals')
+    # parser.add_argument("--vertices_path", type=str, default="vertices_npy", help='path of the ground truth vertex data')
+
+    # use the next 2 lines to train and test on a smaller subset of the data for quick debugging
+    parser.add_argument("--wav_path", type=str, default= "wav_small", help='path of the audio signals')
+    parser.add_argument("--vertices_path", type=str, default="vertices_npy_small", help='path of the ground truth vertex data')
+
+
     parser.add_argument("--gradient_accumulation_steps", type=int, default=1, help='gradient accumulation')
     parser.add_argument("--max_epoch", type=int, default=5, help='number of epochs')
-    parser.add_argument("--device", type=str, default="cuda")
+    parser.add_argument("--device", type=str, default="cuda") # use this line to train and test on GPU, which is much faster than CPU. Make sure to set it to "cpu" if GPU is not available, but note that it will be much slower.
+    # parser.add_argument("--device", type=str, default="cpu") # use this line to train and test on CPU, which is much slower but can be used for debugging if GPU is not available
     parser.add_argument("--template_file", type=str, default="templates.pkl", help='path of the train subject templates')
     parser.add_argument("--save_path", type=str, default="save", help='path to save the trained models')
     parser.add_argument("--result_path", type=str, default="result", help='path to the predictions')
-    parser.add_argument("--train_subjects", type=str, default="1 2 3 6 7 8 9 10 11 12 13")
-    parser.add_argument("--val_subjects", type=str, default="1 2 3 6 7 8 9 10 11 12 13")
-    parser.add_argument("--test_subjects", type=str, default="1 2 3 4 5 6 7 8 9 10 11 12 13")
+    # use the following 3 lines to train and test on the full dataset
+    # parser.add_argument("--train_subjects", type=str, default="1 2 3 6 7 8 9 10 11 12 13")
+    # parser.add_argument("--val_subjects", type=str, default="1 2 3 6 7 8 9 10 11 12 13")
+    # parser.add_argument("--test_subjects", type=str, default="1 2 3 4 5 6 7 8 9 10 11 12 13")
+
+    # use the following 3 lines to train and test on a smaller subset of the data for quick debugging
+    parser.add_argument("--train_subjects", type=str, default="2")
+    parser.add_argument("--val_subjects", type=str, default="2")
+    parser.add_argument("--test_subjects", type=str, default="2")
     parser.add_argument("--input_fps", type=int, default=50, help='HuBERT last hidden state produces 50 fps audio representation')
     parser.add_argument("--output_fps", type=int, default=30, help='fps of the visual data, multiface is available at 30 Hz')
     args = parser.parse_args()
@@ -166,7 +183,7 @@ def main():
 
     assert torch.cuda.is_available()
 
-    model = model.to(torch.device("cuda"))
+    model = model.to(torch.device(args.device))
     dataset = get_dataloaders(args)
     criterion = nn.HuberLoss()
     optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad,model.parameters()), lr=args.lr)

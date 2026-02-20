@@ -6,7 +6,8 @@ import pickle
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--train_subjects", type=str, default="1 2 3 6 7 8 9 10 11 12 13")
+    # parser.add_argument("--train_subjects", type=str, default="1 2 3 6 7 8 9 10 11 12 13") # when trained on the full dataset
+    parser.add_argument("--train_subjects", type=str, default="2") # when trained on a smaller subset of the data for quick debugging
     parser.add_argument("--pred_path", type=str, default="../result/")
     parser.add_argument("--gt_path", type=str, default="../data/multiface/vertices_npy/")
     parser.add_argument("--region_path", type=str, default="../data/multiface/regions/")
@@ -32,7 +33,7 @@ def main():
             maps = f.read().split(", ")
             upper_map = [int(i) for i in maps]
         nr_vertices = 23370
-    else:
+    elif args.dataset == "multiface":
         nr_vertices = 6172
 
         sentence_list = [str(i) for i in range(46, 51)]
@@ -133,64 +134,5 @@ def main():
     # print('ABS FDD: {:.4e}'.format(sum(abs_motion_std_difference) / len(motion_std_difference)))
 
 
-def compute_diversity():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--train_subjects", type=str, default="1 2 3 6 7 8 9 10 11 12 13")
-    parser.add_argument("--test_subjects", type=str, default="1 2 3 4 5 6 7 8 9 10 11 12 13")
-    parser.add_argument("--pred_path", type=str, default="../result/")
-    parser.add_argument("--gt_path", type=str, default="../data/multiface/vertices_npy/")
-    parser.add_argument("--region_path", type=str, default="../data/multiface/regions/")
-    parser.add_argument("--templates_path", type=str, default="../data/multiface/templates.pkl")
-    parser.add_argument("--model", type=str, default="")
-    parser.add_argument("--num_sample", type=str)
-    parser.add_argument("--dataset", type=str, default="multiface")
-    args = parser.parse_args()
-
-    train_subject_list = args.train_subjects.split(" ")
-    test_subject_list = args.test_subjects.split(" ")
-
-
-    if args.dataset == "BIWI":
-        sentence_list = ["e" + str(i).zfill(2) for i in range(37, 41)]
-        nr_vertices = 23370
-    else:
-        nr_vertices = 6172
-
-        sentence_list = [str(i) for i in range(46, 51)]
-
-    num_seq = 0
-    diversity = 0
-    for subject in test_subject_list:
-        for sentence in sentence_list:
-
-            # print(subject, sentence)
-            all_pred_seq = []
-            for condition in train_subject_list:
-                if not os.path.exists(os.path.join(args.pred_path, subject + "_" + sentence + "_condition_" + condition + ".npy")):
-                    continue
-                vertices_pred = np.load(
-                    os.path.join(args.pred_path, subject + "_" + sentence + "_condition_" + condition + ".npy")).reshape(
-                    -1,
-                    nr_vertices,
-                    3)
-                all_pred_seq.append(vertices_pred)
-
-            tottal_diff_seq = 0
-            n_seq = len(all_pred_seq)
-            if n_seq < 2:
-                continue
-            for i in range(n_seq - 1):
-                for j in range(i + 1, n_seq):
-                    tottal_diff_seq += np.linalg.norm(all_pred_seq[i] - all_pred_seq[j], axis=2).mean(axis=1).mean()
-            tottal_diff_seq /= ((n_seq - 1) * n_seq / 2)
-            # print(tottal_diff_seq)
-            diversity += tottal_diff_seq
-
-            num_seq += 1
-
-    print('Diversity: {:.4e}'.format(diversity / num_seq))
-
-
 if __name__ == "__main__":
     main()
-    compute_diversity()
